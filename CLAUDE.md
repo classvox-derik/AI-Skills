@@ -41,6 +41,21 @@ AI-Skills/
     │   │   └── deployment-guard.md    # Example: deployment guard skill
     │   └── resources/
     │       └── skill-template.md      # Blank SKILL.md template
+    ├── acting-proactively/             # Proactive agent architecture
+    │   ├── SKILL.md
+    │   ├── resources/
+    │   │   ├── AGENTS.md
+    │   │   ├── HEARTBEAT.md
+    │   │   ├── MEMORY.md
+    │   │   ├── ONBOARDING.md
+    │   │   ├── SOUL.md
+    │   │   ├── TOOLS.md
+    │   │   └── USER.md
+    │   ├── references/
+    │   │   ├── onboarding-flow.md
+    │   │   └── security-patterns.md
+    │   └── scripts/
+    │       └── security-audit.sh
     ├── building-openclaw/             # Core OpenClaw clone scaffolding
     │   └── SKILL.md
     ├── building-with-claude/          # Claude API & cookbooks reference
@@ -76,62 +91,68 @@ AI-Skills/
 
 > **Maintenance rule:** When adding or removing a skill, always update this catalog to match. Each skill gets a numbered entry with path, purpose, and triggers.
 
-### 1. `creating-skills` — Skill Creator (Meta-Skill)
+### 1. `acting-proactively` — Proactive Agent Architecture
+
+- **Path:** `.agent/skills/acting-proactively/SKILL.md`
+- **Purpose:** Transforms agents into proactive partners with memory persistence, WAL Protocol, Working Buffer, onboarding, heartbeat check-ins, security hardening, and self-improvement guardrails.
+- **Triggers:** Setting up a persistent agent, need context-loss survival, want proactive behavior, need onboarding flow, or security hardening.
+
+### 2. `creating-skills` — Skill Creator (Meta-Skill)
 
 - **Path:** `.agent/skills/creating-skills/SKILL.md`
 - **Purpose:** Scaffolds new Antigravity skills from user requirements. This is a meta-skill — it generates other skills.
 - **Triggers:** User asks to create, build, scaffold, or generate a new skill.
 - **Workflow:** Gather requirements → Name the skill (gerund form) → Draft SKILL.md → Add supporting files → Validate.
 
-### 2. `building-openclaw` — OpenClaw Clone Scaffolding
+### 3. `building-openclaw` — OpenClaw Clone Scaffolding
 
 - **Path:** `.agent/skills/building-openclaw/SKILL.md`
 - **Purpose:** Core instructions for building and scaffolding OpenClaw-inspired clone projects.
 - **Triggers:** User asks to create, build, or scaffold an OpenClaw clone or modular app.
 
-### 3. `building-with-claude` — Claude API & Cookbooks Reference
+### 4. `building-with-claude` — Claude API & Cookbooks Reference
 
 - **Path:** `.agent/skills/building-with-claude/SKILL.md`
 - **Purpose:** Reference guide for building with the Claude API, based on Anthropic's official cookbooks. Maps tasks to recipes for tool use, agents, multimodal, RAG, caching, and integrations.
 - **Triggers:** User builds AI-powered features, integrates Claude API, implements agents, or needs cookbook recipes.
 
-### 4. `communicating-classvox` — ClassVox EdTech Communication
+### 5. `communicating-classvox` — ClassVox EdTech Communication
 
 - **Path:** `.agent/skills/communicating-classvox/SKILL.md`
 - **Purpose:** EdTech-specific patterns for ClassVox communication features.
 - **Triggers:** User works on ClassVox, classroom messaging, or EdTech notification systems.
 
-### 5. `handling-errors` — Error Handling Patterns
+### 6. `handling-errors` — Error Handling Patterns
 
 - **Path:** `.agent/skills/handling-errors/SKILL.md`
 - **Purpose:** Error handling patterns across languages including exceptions, Result types, circuit breakers, retry logic, and graceful degradation.
 - **Triggers:** User implements error handling, designs error-resilient APIs, needs retry/circuit breaker patterns, or improves application reliability.
 
-### 6. `managing-git-workflow` — Multi-Project Git Helpers
+### 7. `managing-git-workflow` — Multi-Project Git Helpers
 
 - **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
 - **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
 - **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
 
-### 7. `improving-self` — Continuous Self-Improvement
+### 8. `improving-self` — Continuous Self-Improvement
 
 - **Path:** `.agent/skills/improving-self/SKILL.md`
 - **Purpose:** Captures learnings, errors, and feature requests to `.learnings/` for continuous agent improvement. Supports promotion to project memory and skill extraction.
 - **Triggers:** Command fails, user corrects agent, knowledge is outdated, better approach discovered, missing capability requested, or before starting a major task.
 
-### 8. `finding-skills` — Discover & Install Agent Skills
+### 9. `finding-skills` — Discover & Install Agent Skills
 
 - **Path:** `.agent/skills/finding-skills/SKILL.md`
 - **Purpose:** Discovers and installs agent skills from the open ecosystem via `npx skills` and `npx clawhub`. Searches by keyword and presents install options.
 - **Triggers:** User asks "find a skill for X", "is there a skill that can...", or wants to extend agent capabilities.
 
-### 9. `managing-google-workspace` — Google Workspace via gog CLI
+### 10. `managing-google-workspace` — Google Workspace via gog CLI
 
 - **Path:** `.agent/skills/managing-google-workspace/SKILL.md`
 - **Purpose:** Gmail, Calendar, Drive, Contacts, Sheets, and Docs access via the `gog` CLI. Requires OAuth setup.
 - **Triggers:** User needs to send/search email, manage calendar events, access Drive, read/write Sheets, export Docs, or look up Contacts.
 
-### 10. `searching-tavily` — AI-Optimized Web Search
+### 11. `searching-tavily` — AI-Optimized Web Search
 
 - **Path:** `.agent/skills/searching-tavily/SKILL.md`
 - **Purpose:** Web search and URL content extraction via the Tavily API. Returns clean, relevant snippets optimized for AI agents.
