@@ -8,7 +8,7 @@ This repo is meant to be added as a **git submodule** in consuming projects. The
 
 ```bash
 # Add the skills database to your project
-git submodule add <repo-url> .agent/skills
+git submodule add https://github.com/classvox-derik/AI-Skills.git .agent/skills
 
 # After cloning a project that uses this submodule
 git submodule update --init --recursive
@@ -19,7 +19,7 @@ This maps the skills database directly into the consuming project's `.agent/skil
 **Updating skills in a consuming project:**
 ```bash
 cd .agent/skills
-git pull origin main
+git pull origin master
 cd ../..
 git add .agent/skills
 git commit -m "Update skills database"

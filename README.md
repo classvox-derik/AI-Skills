@@ -8,7 +8,7 @@ Shared skills database for the Antigravity agent framework. Add this repo as a g
 
 ```bash
 # From your project root
-git submodule add <this-repo-url> .agent/skills
+git submodule add https://github.com/classvox-derik/AI-Skills.git .agent/skills
 git commit -m "Add AI-Skills submodule"
 ```
 

@@ -70,7 +70,7 @@ description: >
 Every OpenClaw-style project should include the AI-Skills database:
 
 ```bash
-git submodule add <ai-skills-repo-url> .agent/skills
+git submodule add https://github.com/classvox-derik/AI-Skills.git .agent/skills
 ```
 
 Add to the project's `CLAUDE.md`:

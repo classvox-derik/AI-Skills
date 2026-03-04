@@ -43,13 +43,13 @@ The AI-Skills database uses submodules. Key commands:
 
 ```bash
 # Add skills to a new project
-git submodule add <ai-skills-url> .agent/skills
+git submodule add https://github.com/classvox-derik/AI-Skills.git .agent/skills
 
 # Clone a project with submodules
 git clone --recurse-submodules <project-url>
 
 # Update submodule to latest
-cd .agent/skills && git pull origin main && cd ../..
+cd .agent/skills && git pull origin master && cd ../..
 git add .agent/skills
 git commit -m "Update AI-Skills submodule"
 
