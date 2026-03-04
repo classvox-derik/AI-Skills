@@ -43,6 +43,8 @@ AI-Skills/
     │       └── skill-template.md      # Blank SKILL.md template
     ├── building-openclaw/             # Core OpenClaw clone scaffolding
     │   └── SKILL.md
+    ├── building-with-claude/          # Claude API & cookbooks reference
+    │   └── SKILL.md
     ├── communicating-classvox/        # EdTech communication patterns
     │   └── SKILL.md
     ├── handling-errors/               # Error handling patterns
@@ -68,23 +70,29 @@ AI-Skills/
 - **Purpose:** Core instructions for building and scaffolding OpenClaw-inspired clone projects.
 - **Triggers:** User asks to create, build, or scaffold an OpenClaw clone or modular app.
 
-### 3. `communicating-classvox` — ClassVox EdTech Communication
+### 3. `building-with-claude` — Claude API & Cookbooks Reference
+
+- **Path:** `.agent/skills/building-with-claude/SKILL.md`
+- **Purpose:** Reference guide for building with the Claude API, based on Anthropic's official cookbooks. Maps tasks to recipes for tool use, agents, multimodal, RAG, caching, and integrations.
+- **Triggers:** User builds AI-powered features, integrates Claude API, implements agents, or needs cookbook recipes.
+
+### 4. `communicating-classvox` — ClassVox EdTech Communication
 
 - **Path:** `.agent/skills/communicating-classvox/SKILL.md`
 - **Purpose:** EdTech-specific patterns for ClassVox communication features.
 - **Triggers:** User works on ClassVox, classroom messaging, or EdTech notification systems.
-
-### 4. `managing-git-workflow` — Multi-Project Git Helpers
-
-- **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
-- **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
-- **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
 
 ### 5. `handling-errors` — Error Handling Patterns
 
 - **Path:** `.agent/skills/handling-errors/SKILL.md`
 - **Purpose:** Error handling patterns across languages including exceptions, Result types, circuit breakers, retry logic, and graceful degradation.
 - **Triggers:** User implements error handling, designs error-resilient APIs, needs retry/circuit breaker patterns, or improves application reliability.
+
+### 6. `managing-git-workflow` — Multi-Project Git Helpers
+
+- **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
+- **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
+- **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
 
 ## Example Reference Implementations
 
