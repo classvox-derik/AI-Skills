@@ -1,0 +1,144 @@
+# AI-Skills — Antigravity Skill Database
+
+This repository is a **shared skills database** for the Antigravity agent framework. Skills are markdown-driven agent capabilities that live under `.agent/skills/` and are designed to be consumed by other projects via **git submodule**.
+
+## Using Skills in Other Projects
+
+This repo is meant to be added as a **git submodule** in consuming projects. The recommended setup:
+
+```bash
+# Add the skills database to your project
+git submodule add <repo-url> .agent/skills
+
+# After cloning a project that uses this submodule
+git submodule update --init --recursive
+```
+
+This maps the skills database directly into the consuming project's `.agent/skills/` directory, making all skills immediately available to the Antigravity agent.
+
+**Updating skills in a consuming project:**
+```bash
+cd .agent/skills
+git pull origin main
+cd ../..
+git add .agent/skills
+git commit -m "Update skills database"
+```
+
+**Important:** Consuming projects should treat this submodule as read-only. Skill authoring and updates happen in this repo, not in downstream projects.
+
+## Repository Structure
+
+```
+AI-Skills/
+├── CLAUDE.md                          # This file — project guide
+├── README.md                          # Init instructions for consuming projects
+└── .agent/skills/                     # All skills live here
+    ├── creating-skills/               # Meta-skill: generates new skills
+    │   ├── SKILL.md                   # Main skill definition
+    │   ├── examples/
+    │   │   ├── code-reviewer.md       # Example: code review skill
+    │   │   └── deployment-guard.md    # Example: deployment guard skill
+    │   └── resources/
+    │       └── skill-template.md      # Blank SKILL.md template
+    ├── building-openclaw/             # Core OpenClaw clone scaffolding
+    │   └── SKILL.md
+    ├── communicating-classvox/        # EdTech communication patterns
+    │   └── SKILL.md
+    └── managing-git-workflow/         # Multi-project git helpers
+        └── SKILL.md
+```
+
+## Skills Catalog
+
+> **Maintenance rule:** When adding or removing a skill, always update this catalog to match. Each skill gets a numbered entry with path, purpose, and triggers.
+
+### 1. `creating-skills` — Skill Creator (Meta-Skill)
+
+- **Path:** `.agent/skills/creating-skills/SKILL.md`
+- **Purpose:** Scaffolds new Antigravity skills from user requirements. This is a meta-skill — it generates other skills.
+- **Triggers:** User asks to create, build, scaffold, or generate a new skill.
+- **Workflow:** Gather requirements → Name the skill (gerund form) → Draft SKILL.md → Add supporting files → Validate.
+
+### 2. `building-openclaw` — OpenClaw Clone Scaffolding
+
+- **Path:** `.agent/skills/building-openclaw/SKILL.md`
+- **Purpose:** Core instructions for building and scaffolding OpenClaw-inspired clone projects.
+- **Triggers:** User asks to create, build, or scaffold an OpenClaw clone or modular app.
+
+### 3. `communicating-classvox` — ClassVox EdTech Communication
+
+- **Path:** `.agent/skills/communicating-classvox/SKILL.md`
+- **Purpose:** EdTech-specific patterns for ClassVox communication features.
+- **Triggers:** User works on ClassVox, classroom messaging, or EdTech notification systems.
+
+### 4. `managing-git-workflow` — Multi-Project Git Helpers
+
+- **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
+- **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
+- **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
+
+## Example Reference Implementations
+
+These are **not standalone skills** — they are documented examples inside the `creating-skills` skill showing how to structure real skills.
+
+### Code Reviewer (`reviewing-code`)
+
+- **File:** `.agent/skills/creating-skills/examples/code-reviewer.md`
+- **Purpose:** Demonstrates a heuristic-heavy skill using bullet points and severity tables.
+- **Pattern:** High-freedom heuristics (correctness, security, performance, readability, testing) with structured output grouped by file and severity level.
+
+### Deployment Guard (`guarding-deployments`)
+
+- **File:** `.agent/skills/creating-skills/examples/deployment-guard.md`
+- **Purpose:** Demonstrates a skill with validation loops and helper scripts.
+- **Pattern:** Plan → Validate → Execute workflow with a `scripts/preflight.sh` helper.
+
+## Skill Authoring Standards
+
+When creating new skills, follow these rules (enforced by the `creating-skills` skill):
+
+### Naming
+
+- Use **gerund form**: `reviewing-code`, `deploying-apps` (not `review-code`, `deploy-app`)
+- Lowercase letters, numbers, and hyphens only. Max 64 characters.
+- Never include "claude" or "anthropic" in the name.
+
+### Directory Layout
+
+```
+.agent/skills/<skill-name>/
+├── SKILL.md          # Required — main logic
+├── scripts/          # Optional — helper scripts
+├── examples/         # Optional — reference implementations
+└── resources/        # Optional — templates or assets
+```
+
+### SKILL.md Format
+
+- **Frontmatter:** YAML with `name` (gerund, max 64 chars) and `description` (3rd person, max 1024 chars, include trigger keywords).
+- **Body sections:** `When to use this skill`, `Workflow` (checklist), `Instructions`, `Resources`.
+- Max **500 lines**. Use progressive disclosure — link to secondary files one level deep.
+- **Forward slashes only** for all paths.
+
+### Instruction Freedom Levels
+
+| Freedom | Format | Use Case |
+|---|---|---|
+| High | Bullet points | Heuristics, guidelines |
+| Medium | Code blocks / templates | Patterns to follow |
+| Low | Exact commands | Critical / fragile operations |
+
+### Complex Skills
+
+For multi-step or risky operations, include:
+- **Checklists** the agent copies and updates to track state
+- **Validation loops:** Plan → Validate → Execute (e.g., `--check` before `--apply`)
+- **Error handling:** Treat scripts as black boxes; instruct the agent to run `--help` if unsure
+
+## Quick Reference: Creating a New Skill
+
+1. Use the `creating-skills` skill, or follow its standards manually.
+2. Create `.agent/skills/<gerund-name>/SKILL.md` using the template at `.agent/skills/creating-skills/resources/skill-template.md`.
+3. Add `scripts/`, `examples/`, or `resources/` directories only if needed.
+4. Validate: self-contained, under 500 lines, forward slashes, gerund name.
