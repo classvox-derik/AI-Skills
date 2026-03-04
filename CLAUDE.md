@@ -61,6 +61,10 @@ AI-Skills/
     │       └── FEATURE_REQUESTS.md
     ├── managing-git-workflow/         # Multi-project git helpers
     │   └── SKILL.md
+    ├── finding-skills/                # Discover & install agent skills
+    │   └── SKILL.md
+    ├── managing-google-workspace/     # Google Workspace via gog CLI
+    │   └── SKILL.md
     └── searching-tavily/              # AI-optimized web search via Tavily
         ├── SKILL.md
         └── scripts/
@@ -115,7 +119,19 @@ AI-Skills/
 - **Purpose:** Captures learnings, errors, and feature requests to `.learnings/` for continuous agent improvement. Supports promotion to project memory and skill extraction.
 - **Triggers:** Command fails, user corrects agent, knowledge is outdated, better approach discovered, missing capability requested, or before starting a major task.
 
-### 8. `searching-tavily` — AI-Optimized Web Search
+### 8. `finding-skills` — Discover & Install Agent Skills
+
+- **Path:** `.agent/skills/finding-skills/SKILL.md`
+- **Purpose:** Discovers and installs agent skills from the open ecosystem via `npx skills` and `npx clawhub`. Searches by keyword and presents install options.
+- **Triggers:** User asks "find a skill for X", "is there a skill that can...", or wants to extend agent capabilities.
+
+### 9. `managing-google-workspace` — Google Workspace via gog CLI
+
+- **Path:** `.agent/skills/managing-google-workspace/SKILL.md`
+- **Purpose:** Gmail, Calendar, Drive, Contacts, Sheets, and Docs access via the `gog` CLI. Requires OAuth setup.
+- **Triggers:** User needs to send/search email, manage calendar events, access Drive, read/write Sheets, export Docs, or look up Contacts.
+
+### 10. `searching-tavily` — AI-Optimized Web Search
 
 - **Path:** `.agent/skills/searching-tavily/SKILL.md`
 - **Purpose:** Web search and URL content extraction via the Tavily API. Returns clean, relevant snippets optimized for AI agents.
