@@ -49,8 +49,23 @@ AI-Skills/
     │   └── SKILL.md
     ├── handling-errors/               # Error handling patterns
     │   └── SKILL.md
-    └── managing-git-workflow/         # Multi-project git helpers
-        └── SKILL.md
+    ├── improving-self/                # Continuous self-improvement
+    │   ├── SKILL.md
+    │   ├── scripts/
+    │   │   ├── activator.sh
+    │   │   ├── error-detector.sh
+    │   │   └── extract-skill.sh
+    │   └── resources/
+    │       ├── LEARNINGS.md
+    │       ├── ERRORS.md
+    │       └── FEATURE_REQUESTS.md
+    ├── managing-git-workflow/         # Multi-project git helpers
+    │   └── SKILL.md
+    └── searching-tavily/              # AI-optimized web search via Tavily
+        ├── SKILL.md
+        └── scripts/
+            ├── search.mjs
+            └── extract.mjs
 ```
 
 ## Skills Catalog
@@ -93,6 +108,18 @@ AI-Skills/
 - **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
 - **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
 - **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
+
+### 7. `improving-self` — Continuous Self-Improvement
+
+- **Path:** `.agent/skills/improving-self/SKILL.md`
+- **Purpose:** Captures learnings, errors, and feature requests to `.learnings/` for continuous agent improvement. Supports promotion to project memory and skill extraction.
+- **Triggers:** Command fails, user corrects agent, knowledge is outdated, better approach discovered, missing capability requested, or before starting a major task.
+
+### 8. `searching-tavily` — AI-Optimized Web Search
+
+- **Path:** `.agent/skills/searching-tavily/SKILL.md`
+- **Purpose:** Web search and URL content extraction via the Tavily API. Returns clean, relevant snippets optimized for AI agents.
+- **Triggers:** Agent needs to search the web, research a topic, find current information, fetch news, or extract content from URLs. Requires `TAVILY_API_KEY`.
 
 ## Example Reference Implementations
 
