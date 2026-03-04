@@ -45,6 +45,8 @@ AI-Skills/
     │   └── SKILL.md
     ├── communicating-classvox/        # EdTech communication patterns
     │   └── SKILL.md
+    ├── handling-errors/               # Error handling patterns
+    │   └── SKILL.md
     └── managing-git-workflow/         # Multi-project git helpers
         └── SKILL.md
 ```
@@ -77,6 +79,12 @@ AI-Skills/
 - **Path:** `.agent/skills/managing-git-workflow/SKILL.md`
 - **Purpose:** Branching strategies, submodule management, and cross-repo coordination.
 - **Triggers:** User needs git workflow automation, branching strategy, or multi-repo help.
+
+### 5. `handling-errors` — Error Handling Patterns
+
+- **Path:** `.agent/skills/handling-errors/SKILL.md`
+- **Purpose:** Error handling patterns across languages including exceptions, Result types, circuit breakers, retry logic, and graceful degradation.
+- **Triggers:** User implements error handling, designs error-resilient APIs, needs retry/circuit breaker patterns, or improves application reliability.
 
 ## Example Reference Implementations
 
