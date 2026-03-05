@@ -10,7 +10,11 @@
       "WebFetch(domain:clawhub.ai)",
       "WebSearch",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(obsidian-cli list:*)",
+      "Bash(obsidian-cli create:*)",
+      "Bash(claude-telegram-bot:*)",
+      "Bash(claude:*)"
     ]
   }
 }
