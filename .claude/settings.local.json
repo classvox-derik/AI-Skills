@@ -15,7 +15,10 @@
       "Bash(obsidian-cli create:*)",
       "Bash(claude-telegram-bot:*)",
       "Bash(claude:*)",
-      "Bash(CLAUDECODE= claude:*)"
+      "Bash(CLAUDECODE= claude:*)",
+      "Bash(source:*)",
+      "Bash(node:*)",
+      "Bash(npx clawhub:*)"
     ]
   }
 }

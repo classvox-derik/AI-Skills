@@ -64,6 +64,8 @@ AI-Skills/
     │   └── SKILL.md
     ├── handling-errors/               # Error handling patterns
     │   └── SKILL.md
+    ├── humanizing-text/               # Remove AI writing patterns
+    │   └── SKILL.md
     ├── improving-self/                # Continuous self-improvement
     │   ├── SKILL.md
     │   ├── scripts/
@@ -175,6 +177,12 @@ AI-Skills/
 - **Path:** `.agent/skills/managing-telegram/SKILL.md`
 - **Purpose:** Bridges Telegram bot messages to the current Claude Code terminal session. Enables chatting with Claude Code from your phone via a Telegram bot relay.
 - **Triggers:** User wants to chat from phone, start a Telegram session, remote control, or mentions `/rc`.
+
+### 14. `humanizing-text` — Remove AI Writing Patterns
+
+- **Path:** `.agent/skills/humanizing-text/SKILL.md`
+- **Purpose:** Removes signs of AI-generated writing from text using 24 pattern detectors covering content, language, style, communication, and filler categories. Based on Wikipedia's "Signs of AI writing" guide.
+- **Triggers:** User asks to humanize text, de-AI writing, make content sound natural/human, review writing for AI patterns, remove AI slop, or rewrite robotic-sounding text.
 
 ## Example Reference Implementations
 
