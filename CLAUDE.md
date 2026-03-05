@@ -80,6 +80,12 @@ AI-Skills/
     │   └── SKILL.md
     ├── managing-google-workspace/     # Google Workspace via gog CLI
     │   └── SKILL.md
+    ├── managing-obsidian/             # Obsidian vault management via CLI
+    │   └── SKILL.md
+    ├── managing-telegram/             # Telegram bot relay for Claude Code
+    │   ├── SKILL.md
+    │   └── scripts/
+    │       └── relay.mjs
     └── searching-tavily/              # AI-optimized web search via Tavily
         ├── SKILL.md
         └── scripts/
@@ -152,11 +158,23 @@ AI-Skills/
 - **Purpose:** Gmail, Calendar, Drive, Contacts, Sheets, and Docs access via the `gog` CLI. Requires OAuth setup.
 - **Triggers:** User needs to send/search email, manage calendar events, access Drive, read/write Sheets, export Docs, or look up Contacts.
 
-### 11. `searching-tavily` — AI-Optimized Web Search
+### 11. `managing-obsidian` — Obsidian Vault Management
+
+- **Path:** `.agent/skills/managing-obsidian/SKILL.md`
+- **Purpose:** Search, create, move, rename, and delete Obsidian notes via `obsidian-cli`. Handles vault discovery, wikilink-safe refactoring, and direct file edits.
+- **Triggers:** User works with Obsidian notes, searches vaults, creates/moves/renames notes, or needs vault path discovery.
+
+### 12. `searching-tavily` — AI-Optimized Web Search
 
 - **Path:** `.agent/skills/searching-tavily/SKILL.md`
 - **Purpose:** Web search and URL content extraction via the Tavily API. Returns clean, relevant snippets optimized for AI agents.
 - **Triggers:** Agent needs to search the web, research a topic, find current information, fetch news, or extract content from URLs. Requires `TAVILY_API_KEY`.
+
+### 13. `managing-telegram` — Telegram Bot Relay
+
+- **Path:** `.agent/skills/managing-telegram/SKILL.md`
+- **Purpose:** Bridges Telegram bot messages to the current Claude Code terminal session. Enables chatting with Claude Code from your phone via a Telegram bot relay.
+- **Triggers:** User wants to chat from phone, start a Telegram session, remote control, or mentions `/rc`.
 
 ## Example Reference Implementations
 
