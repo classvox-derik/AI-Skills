@@ -1,28 +1,29 @@
 ---
 name: managing-telegram
 description: >
-  Bridges Telegram bot messages to the current Claude Code terminal session.
-  Use when the user wants to chat with Claude Code from their phone via Telegram,
-  start a remote control session, or relay messages between Telegram and the terminal.
-  Requires TELEGRAM_BOT_TOKEN and TELEGRAM_USER_ID environment variables.
+  Telegram bot relay that lets you chat with Claude from your phone.
+  Use when the user wants to chat with Claude via Telegram,
+  start a remote control session, or relay messages between Telegram and Claude.
+  Requires TELEGRAM_BOT_TOKEN, TELEGRAM_USER_ID, and ANTHROPIC_API_KEY environment variables.
 ---
 
 # Telegram Relay
 
-Connects your Telegram bot to the current Claude Code session. Messages you send on Telegram appear in the terminal; responses are sent back to Telegram.
+Chat with Claude from your phone via Telegram. The relay polls your Telegram bot for messages, sends them to the Claude API, and returns responses to Telegram.
 
 ## When to use this skill
 
-- User wants to chat with Claude Code from their phone
+- User wants to chat with Claude from their phone
 - User says "start a Telegram session", "remote control", or "/rc"
-- User wants to relay messages between Telegram and the terminal
+- User wants a mobile Claude interface
 
 ## Prerequisites
 
-- **Node.js** installed
+- **Node.js** 18+ installed (for native `fetch`)
 - **Telegram bot** created via @BotFather
 - **`TELEGRAM_BOT_TOKEN`** environment variable set (bot token from @BotFather)
 - **`TELEGRAM_USER_ID`** environment variable set (your numeric Telegram user ID)
+- **`ANTHROPIC_API_KEY`** environment variable set
 
 ### Getting your Telegram User ID
 
@@ -30,9 +31,9 @@ Send `/start` to [@userinfobot](https://t.me/userinfobot) on Telegram. It replie
 
 ## Workflow
 
-- [ ] **1. Verify setup** — Confirm env vars are set and `node` is available
+- [ ] **1. Verify setup** — Confirm all 3 env vars are set and `node` is available
 - [ ] **2. Start relay** — Run the relay script
-- [ ] **3. Chat** — Send messages from Telegram, receive responses
+- [ ] **3. Chat** — Send messages from Telegram, receive Claude responses
 - [ ] **4. Stop** — Press Ctrl+C to end the session
 
 ## Usage
@@ -41,16 +42,16 @@ Send `/start` to [@userinfobot](https://t.me/userinfobot) on Telegram. It replie
 node .agent/skills/managing-telegram/scripts/relay.mjs
 ```
 
-The relay prints incoming Telegram messages to stdout and reads responses from stdin. It only accepts messages from your configured Telegram user ID.
+The relay only accepts messages from your configured Telegram user ID. Conversation history is maintained in memory (last 40 messages).
 
 ### How it works
 
-1. Script starts and confirms bot identity via `getMe`
+1. Script verifies bot token via `getMe`
 2. Long-polls `getUpdates` for new messages
-3. Messages from your user ID are printed to stdout
-4. Lines read from stdin are sent back as Telegram messages
-5. Ctrl+C gracefully shuts down
+3. Messages from your user ID are forwarded to the Claude API
+4. Claude's response is sent back to your Telegram chat
+5. Ctrl+C gracefully shuts down (AbortController cancels in-flight polls)
 
 ## Resources
 
-- [scripts/relay.mjs](scripts/relay.mjs) — The relay script
+- [scripts/relay.mjs](scripts/relay.mjs) — The relay script (zero npm dependencies)

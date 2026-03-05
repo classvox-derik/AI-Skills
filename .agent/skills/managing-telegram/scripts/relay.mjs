@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-import { createInterface } from "node:readline";
-
 // ── Env var validation ──────────────────────────────────────────────
 
 const BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN ?? "").trim();
 const ALLOWED_USER = (process.env.TELEGRAM_USER_ID ?? "").trim();
+const ANTHROPIC_KEY = (process.env.ANTHROPIC_API_KEY ?? "").trim();
 
 if (!BOT_TOKEN) {
   console.error("Missing TELEGRAM_BOT_TOKEN environment variable.");
@@ -19,12 +18,17 @@ if (!ALLOWED_USER) {
   process.exit(1);
 }
 
-// ── API helpers ─────────────────────────────────────────────────────
+if (!ANTHROPIC_KEY) {
+  console.error("Missing ANTHROPIC_API_KEY environment variable.");
+  process.exit(1);
+}
 
-const API = `https://api.telegram.org/bot${BOT_TOKEN}`;
+// ── Telegram API helpers ────────────────────────────────────────────
+
+const TG_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 async function tg(method, body = {}, signal) {
-  const resp = await fetch(`${API}/${method}`, {
+  const resp = await fetch(`${TG_API}/${method}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -37,41 +41,62 @@ async function tg(method, body = {}, signal) {
   return data.result;
 }
 
-// Verify bot token is valid
-const me = await tg("getMe");
-console.error(`Connected as @${me.username}`);
-
-// ── Stdin reader ────────────────────────────────────────────────────
-
-let chatId = null;
-let running = true;
-
-const rl = createInterface({ input: process.stdin });
-
-rl.on("line", async (line) => {
-  const text = line.trim();
-  if (!text || !chatId) return;
-
-  try {
-    // Telegram messages max 4096 chars — split if needed
-    const chunks = [];
-    for (let i = 0; i < text.length; i += 4096) {
-      chunks.push(text.slice(i, i + 4096));
-    }
-    for (const chunk of chunks) {
-      await tg("sendMessage", { chat_id: chatId, text: chunk });
-    }
-  } catch (err) {
-    console.error(`Send error: ${err.message}`);
+async function sendTelegram(chatId, text) {
+  // Telegram messages max 4096 chars — split if needed
+  for (let i = 0; i < text.length; i += 4096) {
+    await tg("sendMessage", { chat_id: chatId, text: text.slice(i, i + 4096) });
   }
-});
+}
 
-rl.on("close", () => {
-  running = false;
-});
+// ── Claude API helper ───────────────────────────────────────────────
 
-// ── Long-polling loop ───────────────────────────────────────────────
+const conversation = [];
 
+async function askClaude(userMessage) {
+  conversation.push({ role: "user", content: userMessage });
+
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": ANTHROPIC_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1024,
+      messages: conversation,
+    }),
+  });
+
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => "");
+    throw new Error(`Claude API error (${resp.status}): ${text}`);
+  }
+
+  const data = await resp.json();
+  const reply = data.content
+    .filter((b) => b.type === "text")
+    .map((b) => b.text)
+    .join("\n");
+
+  conversation.push({ role: "assistant", content: reply });
+
+  // Keep conversation manageable — trim to last 40 messages
+  if (conversation.length > 40) {
+    conversation.splice(0, conversation.length - 40);
+  }
+
+  return reply;
+}
+
+// ── Start ───────────────────────────────────────────────────────────
+
+const me = await tg("getMe");
+console.error(`Telegram connected as @${me.username}`);
+console.error(`Listening for messages from user ${ALLOWED_USER}...`);
+
+let running = true;
 let offset = 0;
 const abort = new AbortController();
 
@@ -80,6 +105,8 @@ process.on("SIGINT", () => {
   running = false;
   abort.abort();
 });
+
+// ── Long-polling loop ───────────────────────────────────────────────
 
 while (running) {
   try {
@@ -101,18 +128,25 @@ while (running) {
         continue;
       }
 
-      chatId = msg.chat.id;
-      console.log(msg.text);
+      const chatId = msg.chat.id;
+      console.error(`<< ${msg.text}`);
+
+      try {
+        const reply = await askClaude(msg.text);
+        console.error(`>> ${reply.slice(0, 100)}${reply.length > 100 ? "..." : ""}`);
+        await sendTelegram(chatId, reply);
+      } catch (err) {
+        console.error(`Claude error: ${err.message}`);
+        await sendTelegram(chatId, "Sorry, I encountered an error. Please try again.");
+      }
     }
   } catch (err) {
     if (err.name === "AbortError") break;
     console.error(`Poll error: ${err.message}`);
-    // Exit on auth errors — token is invalid
     if (err.message.includes("401") || err.message.includes("Unauthorized")) {
       console.error("Bot token appears invalid. Exiting.");
       process.exit(1);
     }
-    // Wait before retrying on transient errors
     await new Promise((r) => setTimeout(r, 3000));
   }
 }
