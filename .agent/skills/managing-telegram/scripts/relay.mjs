@@ -23,11 +23,12 @@ if (!ALLOWED_USER) {
 
 const API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
-async function tg(method, body = {}) {
+async function tg(method, body = {}, signal) {
   const resp = await fetch(`${API}/${method}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal,
   });
   const data = await resp.json();
   if (!data.ok) {
@@ -72,10 +73,12 @@ rl.on("close", () => {
 // ── Long-polling loop ───────────────────────────────────────────────
 
 let offset = 0;
+const abort = new AbortController();
 
 process.on("SIGINT", () => {
   console.error("\nShutting down...");
   running = false;
+  abort.abort();
 });
 
 while (running) {
@@ -84,7 +87,7 @@ while (running) {
       offset,
       timeout: 30,
       allowed_updates: ["message"],
-    });
+    }, abort.signal);
 
     for (const update of updates) {
       offset = update.update_id + 1;
@@ -102,8 +105,14 @@ while (running) {
       console.log(msg.text);
     }
   } catch (err) {
+    if (err.name === "AbortError") break;
     console.error(`Poll error: ${err.message}`);
-    // Wait before retrying on error
+    // Exit on auth errors — token is invalid
+    if (err.message.includes("401") || err.message.includes("Unauthorized")) {
+      console.error("Bot token appears invalid. Exiting.");
+      process.exit(1);
+    }
+    // Wait before retrying on transient errors
     await new Promise((r) => setTimeout(r, 3000));
   }
 }
