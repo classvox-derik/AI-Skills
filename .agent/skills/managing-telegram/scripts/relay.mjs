@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
+import { execFile } from "node:child_process";
+import { randomUUID } from "node:crypto";
+
 // ── Env var validation ──────────────────────────────────────────────
 
 const BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN ?? "").trim();
 const ALLOWED_USER = (process.env.TELEGRAM_USER_ID ?? "").trim();
-const ANTHROPIC_KEY = (process.env.ANTHROPIC_API_KEY ?? "").trim();
 
 if (!BOT_TOKEN) {
   console.error("Missing TELEGRAM_BOT_TOKEN environment variable.");
@@ -15,11 +17,6 @@ if (!BOT_TOKEN) {
 if (!ALLOWED_USER) {
   console.error("Missing TELEGRAM_USER_ID environment variable.");
   console.error("Send /start to @userinfobot on Telegram to get your ID.");
-  process.exit(1);
-}
-
-if (!ANTHROPIC_KEY) {
-  console.error("Missing ANTHROPIC_API_KEY environment variable.");
   process.exit(1);
 }
 
@@ -42,52 +39,36 @@ async function tg(method, body = {}, signal) {
 }
 
 async function sendTelegram(chatId, text) {
-  // Telegram messages max 4096 chars — split if needed
   for (let i = 0; i < text.length; i += 4096) {
     await tg("sendMessage", { chat_id: chatId, text: text.slice(i, i + 4096) });
   }
 }
 
-// ── Claude API helper ───────────────────────────────────────────────
+// ── Claude CLI helper ───────────────────────────────────────────────
 
-const conversation = [];
+const sessionId = randomUUID();
+console.error(`Claude session: ${sessionId}`);
 
-async function askClaude(userMessage) {
-  conversation.push({ role: "user", content: userMessage });
+function askClaude(userMessage) {
+  return new Promise((resolve, reject) => {
+    const env = { ...process.env };
+    delete env.CLAUDECODE; // Allow nested claude invocation
 
-  const resp = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": ANTHROPIC_KEY,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
-      messages: conversation,
-    }),
+    execFile("claude", [
+      "-p", userMessage,
+      "--session-id", sessionId,
+      "--output-format", "text",
+    ], {
+      env,
+      timeout: 120_000,
+      maxBuffer: 1024 * 1024,
+    }, (err, stdout, stderr) => {
+      if (err) return reject(new Error(err.message));
+      const reply = stdout.trim();
+      if (!reply) return reject(new Error("Empty response from Claude"));
+      resolve(reply);
+    });
   });
-
-  if (!resp.ok) {
-    const text = await resp.text().catch(() => "");
-    throw new Error(`Claude API error (${resp.status}): ${text}`);
-  }
-
-  const data = await resp.json();
-  const reply = data.content
-    .filter((b) => b.type === "text")
-    .map((b) => b.text)
-    .join("\n");
-
-  conversation.push({ role: "assistant", content: reply });
-
-  // Keep conversation manageable — trim to last 40 messages
-  if (conversation.length > 40) {
-    conversation.splice(0, conversation.length - 40);
-  }
-
-  return reply;
 }
 
 // ── Start ───────────────────────────────────────────────────────────
@@ -122,7 +103,6 @@ while (running) {
       const msg = update.message;
       if (!msg?.text) continue;
 
-      // Access control: only allow configured user
       if (String(msg.from.id) !== ALLOWED_USER) {
         console.error(`Ignored message from user ${msg.from.id}`);
         continue;
